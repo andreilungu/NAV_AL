@@ -1,0 +1,23 @@
+{
+  "id": "c11f4f9c-1506-4f5e-8e59-ec742ea19e7c",
+  "name": "SortingMethods",
+  "publisher": "andreilungu.com",
+  "brief": "",
+  "description": "A comparision of Insertion Sort and Merge Sort algorithms direclty in AL",
+  "version": "1.0.0.0",
+  "compatibilityId": "1.0.0.0",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "http://andreilungu.com",
+  "logo": "./SortLogo.png",
+  "capabilities": [],
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "11.0.0.0",
+  "application": "11.0.0.0",
+  "idRange": {
+    "from": 50100,
+    "to": 50149
+  }
+}
