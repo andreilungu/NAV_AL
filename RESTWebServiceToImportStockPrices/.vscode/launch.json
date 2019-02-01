@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "Your own server",
+            "server": "http://STD-NAV-26556",
+            "serverInstance": "nav",
+            "authentication": "UserPassword",
+            "startupObjectId": 50102,
+            "startupObjectType": "Page",
+            "breakOnError": true
+        }
+    ]
+}

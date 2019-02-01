@@ -1,0 +1,22 @@
+{
+  "id": "2b69ce26-9c67-41ec-9a19-59753339c165",
+  "name": "TestWebService",
+  "publisher": "Default publisher",
+  "brief": "",
+  "description": "",
+  "version": "1.0.0.0",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "./ImportLogo.jpg",
+  "capabilities": [],
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "13.0.0.0",
+  "application": "13.0.0.0",
+  "idRange": {
+    "from": 50100,
+    "to": 50149
+  }
+}
