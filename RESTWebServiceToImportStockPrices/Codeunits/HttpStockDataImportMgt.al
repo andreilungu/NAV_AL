@@ -22,8 +22,9 @@ codeunit 50107 HttpStockDataImportMgt
         DateText: TExt;
         ClosingPrice: Decimal;
         DateOfRate: Date;
+        LatestDateAlreadyInDatabase: Date;
     begin
-        APiKey := 'YOURAPIKEY';
+        APiKey := 'YOUR_API_KEY';
         Url := 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' +
              Symbol + '&apikey=' + ApiKey;
 
@@ -43,14 +44,16 @@ codeunit 50107 HttpStockDataImportMgt
 
         JsonObject := TimeSeries.AsObject();
         ListOfDates := JsonObject.Keys();
+        LatestDateAlreadyInDatabase := GetLatestDateAlreadyInDB(Symbol);
 
-        foreach DateText in ListOfDates do begin
-            JsonObject.SelectToken(DateText, JTokenRates);
-            JsonObjectRates := JTokenRates.AsObject();
-            ClosingPrice := GetJsonToken(JsonObjectRates, '' + '4. close' + '').AsValue().AsDecimal();
-            DateOfRate := GetDateFromText(DateText);
-            InsertStockPrice(Symbol, DateOfRate, ClosingPrice);
-        end;
+        foreach DateText in ListOfDates do
+            IF GetDateFromText(DateText) >= LatestDateAlreadyInDatabase then begin //the price from the lastest date is changing during the day!
+                JsonObject.SelectToken(DateText, JTokenRates);
+                JsonObjectRates := JTokenRates.AsObject();
+                ClosingPrice := GetJsonToken(JsonObjectRates, '' + '4. close' + '').AsValue().AsDecimal();
+                DateOfRate := GetDateFromText(DateText);
+                InsertStockPrice(Symbol, DateOfRate, ClosingPrice);
+            end;
     end;
 
     local procedure GetJsonToken(JsonObject: JsonObject; TokenKey: text) JsonToken: JsonToken
@@ -59,19 +62,34 @@ codeunit 50107 HttpStockDataImportMgt
             Error('Could not find token with key: %1', TokenKey);
     end;
 
+    local procedure GetLatestDateAlreadyInDB(StockSymbol: Code[10]): Date
+    var
+        StockPrice: Record StockPrice;
+    begin
+        StockPrice.SetRange(Symbol, StockSymbol);
+        IF StockPrice.FindLast() THEN
+            EXIT(StockPrice.Date)
+        ELSE
+            EXIT(0D);
+    end;
 
     local procedure InsertStockPrice(StockSymbol: Code[10]; Date1: Date; ClosingPrice: Decimal)
     var
         StockPrice: Record StockPrice;
     begin
-        If StockPrice.Get(StockSymbol, Date1) then
+        If StockPrice.Get(StockSymbol, Date1) and (StockPrice.ClosingPrice = ClosingPrice) then
             Exit;
 
-        StockPrice.Init();
-        StockPrice.Symbol := StockSymbol;
-        StockPrice.Date := Date1;
-        StockPrice.ClosingPrice := ClosingPrice;
-        StockPrice.Insert();
+        If StockPrice.Symbol = StockSymbol THEN begin
+            StockPrice.ClosingPrice := ClosingPrice;
+            StockPrice.Modify();
+        end else begin
+            StockPrice.Init();
+            StockPrice.Symbol := StockSymbol;
+            StockPrice.Date := Date1;
+            StockPrice.ClosingPrice := ClosingPrice;
+            StockPrice.Insert();
+        end;
     end;
 
     local procedure GetDateFromText(DateText: Text): Date
