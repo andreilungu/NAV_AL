@@ -1,0 +1,6 @@
+# launch setting file
+launch.json
+
+#al packages
+*.app
+
