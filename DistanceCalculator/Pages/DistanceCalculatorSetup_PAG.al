@@ -13,26 +13,21 @@ page 50050 "Distance Calculator Setup"
         {
             group(General)
             {
-                field("API Type"; "API Type")
+                field(Enabled; Enabled)
                 {
                     ApplicationArea = All;
                 }
-
-                field("API Base URL"; "API Base URL")
-                {
-                    ApplicationArea = All;
-                }
-
-                field("API Key"; "API Key")
-                {
-                    ApplicationArea = All;
-                }
-
                 field("Refresh Interval"; "Refresh Interval")
                 {
                     ApplicationArea = All;
                     CaptionML = ENU = 'Refresh Interval (days)';
                 }
+            }
+
+            part(DistanceCalcSetupLines; "Distance Calc. Setup Lines")
+            {
+                ApplicationArea = All;
+
             }
         }
     }

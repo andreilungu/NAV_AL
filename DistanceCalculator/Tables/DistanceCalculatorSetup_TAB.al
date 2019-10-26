@@ -10,17 +10,6 @@ table 50050 "Distance Calculator Setup"
 
         }
 
-        field(10; "API Base URL"; Text[100])
-        {
-            DataClassification = ToBeClassified;
-        }
-
-        field(11; "API Key"; Text[150])
-        {
-            DataClassification = ToBeClassified;
-            ExtendedDatatype = Masked;
-        }
-
         field(20; "Refresh Interval"; Integer)
         {
             DataClassification = ToBeClassified;
@@ -28,10 +17,11 @@ table 50050 "Distance Calculator Setup"
             InitValue = 0;
         }
 
-        field(30; "API Type"; Option)
+        field(30; Enabled; Boolean)
         {
-            OptionMembers = "Google Maps","Bing Maps";
+            DataClassification = ToBeClassified;
         }
+
     }
 
     keys
