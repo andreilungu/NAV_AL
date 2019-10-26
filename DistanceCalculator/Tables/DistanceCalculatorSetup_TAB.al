@@ -27,6 +27,11 @@ table 50050 "Distance Calculator Setup"
             MinValue = 0;
             InitValue = 0;
         }
+
+        field(30; "API Type"; Option)
+        {
+            OptionMembers = "Google Maps","Bing Maps";
+        }
     }
 
     keys

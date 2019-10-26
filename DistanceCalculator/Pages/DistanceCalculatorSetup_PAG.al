@@ -13,6 +13,11 @@ page 50050 "Distance Calculator Setup"
         {
             group(General)
             {
+                field("API Type"; "API Type")
+                {
+                    ApplicationArea = All;
+                }
+
                 field("API Base URL"; "API Base URL")
                 {
                     ApplicationArea = All;
