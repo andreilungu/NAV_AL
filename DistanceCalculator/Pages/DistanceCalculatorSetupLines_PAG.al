@@ -45,4 +45,10 @@ page 50051 "Distance Calc. Setup Lines"
         CurrPage.Update(false);
     end;
 
+    trigger OnOpenPage()
+    var
+    begin
+        SetCurrentKey(Priority);
+    end;
+
 }
