@@ -39,4 +39,10 @@ page 50051 "Distance Calc. Setup Lines"
         CurrPage.Update(false);
     end;
 
+    trigger OnInsertRecord(Belowxrec: Boolean): Boolean
+    var
+    begin
+        CurrPage.Update(false);
+    end;
+
 }
