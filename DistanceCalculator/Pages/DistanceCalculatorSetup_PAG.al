@@ -22,6 +22,11 @@ page 50050 "Distance Calculator Setup"
                     ApplicationArea = All;
                     CaptionML = ENU = 'Refresh Interval (days)';
                 }
+
+                field("Log Web Requests"; "Log Web Requests")
+                {
+                    ApplicationArea = All;
+                }
             }
 
             part(DistanceCalcSetupLines; "Distance Calc. Setup Lines")
@@ -36,13 +41,15 @@ page 50050 "Distance Calculator Setup"
     {
         area(Processing)
         {
-            action(ActionName)
+            action(Test)
             {
                 ApplicationArea = All;
 
                 trigger OnAction()
+                var
+                    GoogleMapsService: Codeunit "Google Maps Service";
                 begin
-
+                    GoogleMapsService.Run;
                 end;
             }
         }

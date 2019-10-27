@@ -22,6 +22,11 @@ table 50050 "Distance Calculator Setup"
             DataClassification = ToBeClassified;
         }
 
+        field(40; "Log Web Requests"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+
     }
 
     keys
