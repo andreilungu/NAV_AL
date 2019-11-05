@@ -10,7 +10,7 @@ page 50051 "Distance Calc. Setup Lines"
         {
             repeater(Lines)
             {
-                field("API Type"; "API Type")
+                field("API Code"; "API Code")
                 {
                     ApplicationArea = All;
                 }
@@ -29,10 +29,15 @@ page 50051 "Distance Calc. Setup Lines"
                     ApplicationArea = All;
                     ShowMandatory = True;
                 }
+
+                field("Data Exch. Def. Code"; "Data Exch. Def. Code")
+                {
+                    ApplicationArea = All;
+                    ShowMandatory = true;
+                }
             }
         }
     }
-
     trigger OnModifyRecord(): Boolean
     var
     begin

@@ -47,7 +47,7 @@ page 50050 "Distance Calculator Setup"
 
                 trigger OnAction()
                 var
-                    GoogleMapsService: Codeunit "Google Maps Service";
+                    GoogleMapsService: Codeunit 50001;
                 begin
                     GoogleMapsService.Run;
                 end;

@@ -4,9 +4,9 @@ table 50052 "Distance Calculator Setup Line"
 
     fields
     {
-        field(30; "API Type"; Option)
+        field(1; "API Code"; Code[20])
         {
-            OptionMembers = "Google Maps","Bing Maps";
+            DataClassification = ToBeClassified;
         }
 
         field(10; "API Base URL"; Text[100])
@@ -26,11 +26,17 @@ table 50052 "Distance Calculator Setup Line"
             MinValue = 1;
         }
 
+        field(30; "Data Exch. Def. Code"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "Data Exch. Def".Code;
+        }
+
     }
 
     keys
     {
-        key(PK; "API Type")
+        key(PK; "API Code")
         {
             Clustered = true;
         }
