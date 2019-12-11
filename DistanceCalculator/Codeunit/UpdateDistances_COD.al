@@ -27,6 +27,10 @@ codeunit 50001 "Update Distances"
         XmlDoc: XmlDocument;
         GetJsonStructure: Codeunit "Get Json Structure";
         DataExchangeDef: Record "Data Exch. Def";
+        rootNode: XmlNode;
+        NavDataElement: XmlElement;
+        newElement: XmlElement;
+        T: Text;
     begin
         HttpClient.Get(Url, Response);
 
@@ -39,10 +43,28 @@ codeunit 50001 "Update Distances"
         Response.Content.ReadAs(ResponseString);
 
         XmlDocument.ReadFrom(ResponseString, XmlDoc);
+
+        //add to xml extra needed info: Customer No, Address Code, Location Code
+        XmlDoc.SelectSingleNode('//*', rootNode);
+
+        NavDataElement := XmlElement.Create('NavData');
+        newElement := XmlElement.Create('CustomerNo');
+        newElement.Add('10000');
+        NavDataElement.Add(newElement);
+        newElement := XmlElement.Create('AddressCode');
+        newElement.Add('Default');
+        NavDataElement.Add(newElement);
+        newElement := XmlElement.Create('LocationCode');
+        newElement.Add('BLUE');
+        NavDataElement.Add(newElement);
+        rootNode.AsXmlElement().AddFirst(NavDataElement);
+
         TempBlob.CreateOutStream(OutStr);
         XmlDoc.WriteTo(OutStr);
 
         TempBlob.CreateInStream(inStr);
+        //inStr.Read(T);
+        //Message(T);
 
         //create data exchange
         DataExchangeDef.Get(DataExchangeDefCode);
@@ -50,6 +72,7 @@ codeunit 50001 "Update Distances"
         CODEUNIT.RUN(DataExchangeDef."Reading/Writing Codeunit", DataExchange);
 
         //create distance calcutation records using field mapping
+        DataExchangeDef.ProcessDataExchange(DataExchange);
 
     end;
 

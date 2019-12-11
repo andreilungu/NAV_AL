@@ -1,4 +1,4 @@
-table 50051 "Address Distance"
+table 50051 "Customer Location Distance"
 {
     DataClassification = ToBeClassified;
 
@@ -56,7 +56,7 @@ table 50051 "Address Distance"
 
     keys
     {
-        key(PK; "Customer No.")
+        key(PK; "Customer No.", "Address Code", "Location Code")
         {
             Clustered = true;
         }
@@ -67,12 +67,12 @@ table 50051 "Address Distance"
 
     trigger OnInsert()
     begin
-
+        "Last Refresh Date" := Today;
     end;
 
     trigger OnModify()
     begin
-
+        "Last Refresh Date" := Today;
     end;
 
     trigger OnDelete()
@@ -82,7 +82,7 @@ table 50051 "Address Distance"
 
     trigger OnRename()
     begin
-
+        "Last Refresh Date" := Today;
     end;
 
 }
