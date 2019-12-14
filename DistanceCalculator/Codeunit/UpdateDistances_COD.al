@@ -9,17 +9,16 @@ codeunit 50001 "Update Distances"
         DistanceCalcSetupLine.Get('GOOGLE MAPS');
         APIKey := DistanceCalcSetupLine."API Key";
         Url := DistanceCalcSetupLine."API Base URL" +
-            'xml?origins=57,+Ion+Heliade Radulescu,+Campina,+Prahova,+Romania&destinations=11,+Episcopul Vulcan,+Bucharest,+Bucharest,+Romania&mode=driving&key=' + APIKey;
+            'xml?origins=1,+Stadionului,+Brasov,+Romania&destinations=5,+Bulevardul+Unirii,+Bucharest,+Bucharest,+Romania&mode=driving&key=' + APIKey;
 
-        ImportDistance(Url, DistanceCalcSetupLine."Data Exch. Def. Code");
+        ImportDistance(Url, DistanceCalcSetupLine, '30000', 'Default', 'GREEN');
 
     end;
 
-    procedure ImportDistance(Url: Text; DataExchangeDefCode: Code[20]);
+    procedure ImportDistance(Url: Text; DistanceCalcSetupLine: Record "Distance Calculator Setup Line"; CustomerNo: Code[20]; AddressCode: Code[20]; LocationCode: Code[20]);
     var
-        HttpClient: HttpClient;
-        Response: HttpResponseMessage;
-        ResponseString: Text;
+        ResponseInStr: InStream;
+        BlankInstream: InStream;
         TempBlob: Codeunit "Temp Blob";
         OutStr: OutStream;
         inStr: InStream;
@@ -31,6 +30,48 @@ codeunit 50001 "Update Distances"
         NavDataElement: XmlElement;
         newElement: XmlElement;
         T: Text;
+        XMLDomMgt: Codeunit "XML DOM Management";
+    begin
+
+        ExecuteWSRequest(Url, ResponseInStr);
+
+        //create data exchange
+        DataExchangeDef.Get(DistanceCalcSetupLine."Data Exch. Def. Code");
+        IF DataExchangeDef."File Type" = DataExchangeDef."File Type"::Json then begin
+            TempBlob.CreateOutStream(OutStr);
+            IF NOT GetJsonStructure.JsonToXML(ResponseInStr, OutStr) then
+                GetJsonStructure.JsonToXMLCreateDefaultRoot(ResponseInStr, OutStr);
+            Clear(ResponseInStr);
+            TempBlob.CreateInStream(ResponseInStr); //Json response converted to Xml
+        End;
+
+        //add to xml extra needed info: Customer No, Address Code, Location Code
+        XmlDocument.ReadFrom(ResponseInStr, XmlDoc);
+        XmlDoc.SelectSingleNode('//*', rootNode);
+
+        NavDataElement := XmlElement.Create('NavData');
+        AddXmlElement(NavDataElement, 'CustomerNo', CustomerNo);
+        AddXmlElement(NavDataElement, 'AddressCode', AddressCode);
+        AddXmlElement(NavDataElement, 'LocationCode', LocationCode);
+        rootNode.AsXmlElement().AddFirst(NavDataElement);
+
+        TempBlob.CreateOutStream(OutStr);
+        XmlDoc.WriteTo(OutStr);
+        TempBlob.CreateInStream(inStr);
+
+        DataExchange.InsertRec('GoogleMapsDistanceMatrix', inStr, DataExchangeDef.Code);
+
+        CODEUNIT.RUN(DataExchangeDef."Reading/Writing Codeunit", DataExchange);
+
+        //create distance calcutation records using field mapping
+        DataExchangeDef.ProcessDataExchange(DataExchange);
+
+    end;
+
+    local procedure ExecuteWSRequest(Url: Text; VAR ResponseInstream: Instream);
+    var
+        HttpClient: HttpClient;
+        Response: HttpResponseMessage;
     begin
         HttpClient.Get(Url, Response);
 
@@ -40,40 +81,16 @@ codeunit 50001 "Update Distances"
                 Response.HttpStatusCode(),
                 Response.ReasonPhrase()));
 
-        Response.Content.ReadAs(ResponseString);
+        Response.Content.ReadAs(ResponseInstream);
+    end;
 
-        XmlDocument.ReadFrom(ResponseString, XmlDoc);
-
-        //add to xml extra needed info: Customer No, Address Code, Location Code
-        XmlDoc.SelectSingleNode('//*', rootNode);
-
-        NavDataElement := XmlElement.Create('NavData');
-        newElement := XmlElement.Create('CustomerNo');
-        newElement.Add('10000');
-        NavDataElement.Add(newElement);
-        newElement := XmlElement.Create('AddressCode');
-        newElement.Add('Default');
-        NavDataElement.Add(newElement);
-        newElement := XmlElement.Create('LocationCode');
-        newElement.Add('BLUE');
-        NavDataElement.Add(newElement);
-        rootNode.AsXmlElement().AddFirst(NavDataElement);
-
-        TempBlob.CreateOutStream(OutStr);
-        XmlDoc.WriteTo(OutStr);
-
-        TempBlob.CreateInStream(inStr);
-        //inStr.Read(T);
-        //Message(T);
-
-        //create data exchange
-        DataExchangeDef.Get(DataExchangeDefCode);
-        DataExchange.InsertRec('GoogleMapsDistanceMatrix', inStr, DataExchangeDef.Code);
-        CODEUNIT.RUN(DataExchangeDef."Reading/Writing Codeunit", DataExchange);
-
-        //create distance calcutation records using field mapping
-        DataExchangeDef.ProcessDataExchange(DataExchange);
-
+    local procedure AddXmlElement(var ParentElement: XmlElement; NewElementName: Text; NewElementValue: Text);
+    var
+        newElement: XmlElement;
+    begin
+        newElement := XmlElement.Create(NewElementName);
+        newElement.Add(NewElementValue);
+        ParentElement.Add(newElement);
     end;
 
 }
