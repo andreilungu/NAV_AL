@@ -28,9 +28,6 @@ codeunit 50001 "Update Distances"
         DataExchangeDef: Record "Data Exch. Def";
         rootNode: XmlNode;
         NavDataElement: XmlElement;
-        newElement: XmlElement;
-        T: Text;
-        XMLDomMgt: Codeunit "XML DOM Management";
     begin
 
         ExecuteWSRequest(Url, ResponseInStr);
