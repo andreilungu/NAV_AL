@@ -64,6 +64,9 @@ codeunit 50000 "Map Distances"
         IF Not AssignValue(RecRef, CustomerLocationDistance.FieldNo("Location Address"), DataExchangeField, '') then
             exit(false);
 
+        IF Not AssignValue(RecRef, CustomerLocationDistance.FieldNo("Api Setup Line"), DataExchangeField, '') then
+            exit(false);
+
         IF NOT RecRef.Insert(TRUE) then
             exit(RecRef.Modify(TRUE));
         exit(TRUE);

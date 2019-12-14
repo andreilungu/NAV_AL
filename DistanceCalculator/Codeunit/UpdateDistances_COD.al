@@ -9,7 +9,7 @@ codeunit 50001 "Update Distances"
         DistanceCalcSetupLine.Get('GOOGLE MAPS');
         APIKey := DistanceCalcSetupLine."API Key";
         Url := DistanceCalcSetupLine."API Base URL" +
-            'xml?origins=1,+Stadionului,+Brasov,+Romania&destinations=5,+Bulevardul+Unirii,+Bucharest,+Bucharest,+Romania&mode=driving&key=' + APIKey;
+            'xml?origins=5,+Bulevardul+Unirii,+Bucharest,+Bucharest,+Romania&destinations=1,+Stadionului,+Brasov,+Romania,+Romania&mode=driving&key=' + APIKey;
 
         ImportDistance(Url, DistanceCalcSetupLine, '30000', 'Default', 'GREEN');
 
@@ -45,7 +45,7 @@ codeunit 50001 "Update Distances"
             TempBlob.CreateInStream(ResponseInStr); //Json response converted to Xml
         End;
 
-        //add to xml extra needed info: Customer No, Address Code, Location Code
+        //add to xml extra needed info: Customer No, Address Code, Location Code, API Setup Line No
         XmlDocument.ReadFrom(ResponseInStr, XmlDoc);
         XmlDoc.SelectSingleNode('//*', rootNode);
 
@@ -53,6 +53,7 @@ codeunit 50001 "Update Distances"
         AddXmlElement(NavDataElement, 'CustomerNo', CustomerNo);
         AddXmlElement(NavDataElement, 'AddressCode', AddressCode);
         AddXmlElement(NavDataElement, 'LocationCode', LocationCode);
+        AddXmlElement(NavDataElement, 'APISetupLineCode', DistanceCalcSetupLine."API Code");
         rootNode.AsXmlElement().AddFirst(NavDataElement);
 
         TempBlob.CreateOutStream(OutStr);
