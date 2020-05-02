@@ -47,7 +47,7 @@ codeunit 50100 "Test UnixTimeStamp API Mgmt."
     begin
         CurrDT := CurrDT.Now;
         CurrDT.AddMinutes(1); //maybe web service call takes little time so need to ensure token does not expire in the meantime
-        //Exit(YourSetupTable."Token Expiration DateTime" < CurrDT);
+        //Exit(YourSetupTable."Token - Expires On" < CurrDT);
     end;
 
     procedure GetOauthToken()
