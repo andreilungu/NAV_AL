@@ -15,7 +15,6 @@ codeunit 50100 "Test UnixTimeStamp API Mgmt."
         DateTImeDotNet: DotNet DateTime;
         DateTImeDotNetUTC: DotNet DateTime;
         DurationDelta: Duration;
-        DT: DateTime;
     begin
         IF Duration = 0 THEN BEGIN
             EndDate := StartDate;
