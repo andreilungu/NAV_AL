@@ -78,7 +78,7 @@ codeunit 50100 "Test UnixTimeStamp API Mgmt."
             JObject.ReadFrom(APITokenResultTxt); //read the content of the json
         JObject.SelectToken('access_token', JToken);
         //see https://andreilungu.com/read-write-text-from-to-blob-fields-generic-way-nav/ for more info:
-        //YourSetupTable.WriteTextToBLOB(NGGAPISetup.FieldNo("Token"), JToken.AsValue().AsText());
+        //YourSetupTable.WriteTextToBLOB(YourSetupTable.FieldNo("Token"), JToken.AsValue().AsText());
         //YourSetupTable.FIND;
         JObject.SelectToken('expires_in', JToken);
         //Evaluate(YourSetupTable."Token - Expires In", JToken.AsValue().AsText());
