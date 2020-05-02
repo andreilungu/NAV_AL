@@ -85,7 +85,7 @@ codeunit 50100 "Test UnixTimeStamp API Mgmt."
         JObject.SelectToken('expires_on', JToken);
         //YourSetupTable."Token - Expires On" := CalcUnixDateTime(19700101D, 000000T, JToken.AsValue().AsInteger());
         //Dur := (YourSetupTable."Token - Expires In" * 1000) * (-1);
-        //YourSetupTable."Token - INT Created At" := YourSetupTable."Token - INT Expires On" + Dur;
+        //YourSetupTable."Token - Created At" := YourSetupTable."Token - Expires On" + Dur;
         //YourSetupTable.Modify();
 
     end;
