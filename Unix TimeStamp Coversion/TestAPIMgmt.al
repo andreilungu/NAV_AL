@@ -48,7 +48,7 @@ codeunit 50100 "Test UnixTimeStamp API Mgmt."
         CurrDT := CurrDT.Now;
         CurrDT.AddMinutes(1); //maybe web service call takes little time so need to ensure token does not expire in the meantime
         Evaluate(CurrDTNAV, CurrDT.ToString());
-        Exit(NGGAPISetup."Token - INT Expires On" > CurrDTNav);
+        Exit(YourSetupTable."Token - INT Expires On" > CurrDTNav);
     end;
 
     procedure GetOauthToken()
