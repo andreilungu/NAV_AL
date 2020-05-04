@@ -43,10 +43,12 @@ codeunit 50100 "Test UnixTimeStamp API Mgmt."
     local procedure CheckExistingTokenIsValid(): Boolean
     var
         CurrDT: DotNet DateTime;
+        CurrDTNAV: DateTime;
     begin
         CurrDT := CurrDT.Now;
         CurrDT.AddMinutes(1); //maybe web service call takes little time so need to ensure token does not expire in the meantime
-        //Exit(YourSetupTable."Token - Expires On" < CurrDT);
+        Evaluate(CurrDTNAV, CurrDT.ToString());
+        Exit(NGGAPISetup."Token - INT Expires On" > CurrDTNav);
     end;
 
     procedure GetOauthToken()
