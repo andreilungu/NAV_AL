@@ -80,7 +80,7 @@ page 50101 "Web Integration Actions"
                 Caption = 'Process Line';
                 trigger OnAction()
                 var
-                    iProcessWebsiteAction: Interface iProcessWebSiteActions;
+                    iProcessWebsiteAction: Interface iWebSiteActionsProcessor;
                 begin
                     rec.TestField(Processed, false);
                     iProcessWebsiteAction := Rec."For WebSite";
@@ -97,7 +97,7 @@ page 50101 "Web Integration Actions"
                 Caption = 'Process Items Bulk';
                 trigger OnAction()
                 var
-                    iProcessWebsiteAction: Interface iProcessWebSiteActions;
+                    iProcessWebsiteAction: Interface iWebSiteActionsProcessor;
                     WebActions: Record "Web Integration Action Log";
                 begin
                     iProcessWebsiteAction := Rec."For WebSite";

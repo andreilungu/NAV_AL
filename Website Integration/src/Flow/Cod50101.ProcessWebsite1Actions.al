@@ -1,4 +1,4 @@
-codeunit 50101 "Process Website 1 Actions" implements iProcessWebSiteActions
+codeunit 50101 "Process Website 1 Actions" implements iWebSiteActionsProcessor
 {
 
     procedure ProcessActions(var WebIntAct: Record "Web Integration Action Log")
