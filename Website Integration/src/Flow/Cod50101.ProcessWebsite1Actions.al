@@ -131,7 +131,7 @@ codeunit 50101 "Process Website 1 Actions" implements iWebSiteActionsProcessor
                 JObjectItemTrans.Add('Description', ItemTranslation.Description);
                 JObjectItemTrans.Add('VariantCode', ItemTranslation."Variant Code");
                 JArrItemTranslations.Add(JObjectItemTrans.Clone());
-                Clear(JArrItemTranslations);
+                Clear(JObjectItemTrans);
             until ItemTranslation.Next = 0;
             JsonObject.Add('ItemTranslations', JArrItemTranslations);
         end;
@@ -163,7 +163,10 @@ codeunit 50101 "Process Website 1 Actions" implements iWebSiteActionsProcessor
         if TransportOK and Response.IsSuccessStatusCode() then
             exit(true);
 
-        ErrorTxt := StrSubstNo('Something went wrong: %1', GetLastErrorText);
+        ErrorTxt := StrSubstNo(WebAPIErrorTxtG, Response.HttpStatusCode, Response.ReasonPhrase);
         exit(false);
     end;
+
+    var
+        WebAPIErrorTxtG: TextConst ENU = 'Something went wrong:\\Error Status Code: %1;\\Description: %2';
 }

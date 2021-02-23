@@ -80,11 +80,11 @@ page 50101 "Web Integration Actions"
                 Caption = 'Process Line';
                 trigger OnAction()
                 var
-                    iProcessWebsiteAction: Interface iWebSiteActionsProcessor;
+                    iWebSiteActionsProcessor: Interface iWebSiteActionsProcessor;
                 begin
                     rec.TestField(Processed, false);
-                    iProcessWebsiteAction := Rec."For WebSite";
-                    iProcessWebsiteAction.ProcessActions(Rec);
+                    iWebSiteActionsProcessor := Rec."For WebSite";
+                    iWebSiteActionsProcessor.ProcessActions(Rec);
                 end;
             }
 
@@ -97,11 +97,11 @@ page 50101 "Web Integration Actions"
                 Caption = 'Process Items Bulk';
                 trigger OnAction()
                 var
-                    iProcessWebsiteAction: Interface iWebSiteActionsProcessor;
+                    iWebSiteActionsProcessor: Interface iWebSiteActionsProcessor;
                     WebActions: Record "Web Integration Action Log";
                 begin
-                    iProcessWebsiteAction := Rec."For WebSite";
-                    iProcessWebsiteAction.ProcessActions(Database::Item);
+                    iWebSiteActionsProcessor := Rec."For WebSite";
+                    iWebSiteActionsProcessor.ProcessActions(Database::Item);
                 end;
             }
         }
