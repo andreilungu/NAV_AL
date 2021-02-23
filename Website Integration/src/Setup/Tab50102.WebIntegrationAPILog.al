@@ -2,7 +2,7 @@ table 50102 "Web Integration API Log"
 {
     Caption = 'Web Integration API Log';
     DataClassification = ToBeClassified;
-
+    LookupPageId = 50102;
 
     fields
     {

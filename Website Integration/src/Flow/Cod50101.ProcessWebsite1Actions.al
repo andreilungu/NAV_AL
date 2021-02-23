@@ -92,7 +92,10 @@ codeunit 50101 "Process Website 1 Actions" implements iWebSiteActionsProcessor
                     AddItemTranslationToJObjectItem(JObjectItem, Item);
                     JArrayItems.Add(JObjectItem.Clone());
                     Clear(JObjectItem);
+                    tempWebIntActToMarkProcessed := WebIntAct_local;
+                    tempWebIntActToMarkProcessed.Insert(true);
                 end;
+
             Until WebIntAct_local.Next = 0;
             JObjectMain.Add('Items', JArrayItems);
             JObjectMain.WriteTo(txt);
@@ -143,7 +146,7 @@ codeunit 50101 "Process Website 1 Actions" implements iWebSiteActionsProcessor
     begin
         IF tempWebIntActToMarkProcessed.FindSet() then
             repeat
-                IF WebActions.Get(tempWebIntActToMarkProcessed) THEN begin
+                IF WebActions.Get(tempWebIntActToMarkProcessed.Id) THEN begin
                     WebActions.Validate(Processed, TRue);
                     IF APILog."Entry No." > 0 then
                         WebActions."Web API Log Id" := APILog."Entry No.";
