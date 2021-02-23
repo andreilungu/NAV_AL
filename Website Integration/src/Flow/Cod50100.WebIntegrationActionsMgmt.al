@@ -17,7 +17,7 @@ codeunit 50100 "Web Integration Actions Mgmt."
         IF NOt CheckFieldsChanged(Rec, xRec) then
             exit;
 
-        IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1|%2', WebIntegrationAction."Action Type"::Insert, WebIntegrationAction."Action Type"::Modify)) then
+        IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1|%2', WebIntegrationAction."Action Type"::Insert, WebIntegrationAction."Action Type"::Modify), ForWebsite::"Website 1") then
             exit;
 
         ActionType := ActionType::Modify;
@@ -39,7 +39,7 @@ codeunit 50100 "Web Integration Actions Mgmt."
 
         IF Rec."Active For Website 1" then begin
             ActionType := ActionType::Insert;
-            IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction."Action Type"::Delete), WebIntegrationAction2) then
+            IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction."Action Type"::Delete), ForWebsite::"Website 1", WebIntegrationAction2) then
                 WebIntegrationAction2.DeleteAll();
             WebIntegrationAction2.SetRange(Processed, true);
             WebIntegrationAction2.SetRange("Action Type");
@@ -51,11 +51,11 @@ codeunit 50100 "Web Integration Actions Mgmt."
         end;
         IF (NOT Rec."Active For Website 1") then begin
             ActionType := ActionType::Delete;
-            IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction2."Action Type"::Insert), WebIntegrationAction3) then begin
+            IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction2."Action Type"::Insert), ForWebsite::"Website 1", WebIntegrationAction3) then begin
                 WebIntegrationAction3.DeleteAll();
                 exit;
             end;
-            IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction2."Action Type"::Modify), WebIntegrationAction2) then
+            IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction2."Action Type"::Modify), ForWebsite::"Website 1", WebIntegrationAction2) then
                 WebIntegrationAction2.DeleteAll();
 
         end;
@@ -78,9 +78,9 @@ codeunit 50100 "Web Integration Actions Mgmt."
         IF Rec."Active For Website 1" then
             exit;
 
-        IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction2."Action Type"::Modify), WebIntegrationAction2) then
+        IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction2."Action Type"::Modify), ForWebsite::"Website 1", WebIntegrationAction2) then
             WebIntegrationAction2.DeleteAll();
-        IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction2."Action Type"::Insert), WebIntegrationAction2) then begin
+        IF CheckUnprocessedWebIntegrationActionsAlreadyExist(Database::Item, Rec.RecordId, StrSubstNo('%1', WebIntegrationAction2."Action Type"::Insert), ForWebsite::"Website 1", WebIntegrationAction2) then begin
             WebIntegrationAction2.DeleteAll();
             exit;
         end;
@@ -187,31 +187,32 @@ codeunit 50100 "Web Integration Actions Mgmt."
          (Item."Unit Price" <> xItem."Unit Price"));
     end;
 
-    local procedure CheckUnprocessedWebIntegrationActionsAlreadyExist(TableID: Integer; RecId: RecordId; ActionTypeFilter: Text): Boolean
+    local procedure CheckUnprocessedWebIntegrationActionsAlreadyExist(TableID: Integer; RecId: RecordId; ActionTypeFilter: Text; ForWebSite: Enum "For WebSite Enum"): Boolean
     var
         WebIntegrationAction2: Record "Web Integration Action Log";
     begin
-        FilterUnprocessedWebIntegrationActions(TableID, RecId, ActionTypeFilter, WebIntegrationAction2);
+        FilterUnprocessedWebIntegrationActions(TableID, RecId, ActionTypeFilter, ForWebSite, WebIntegrationAction2);
         IF NOT WebIntegrationAction2.IsEmpty then
             exit(true);
 
         exit(false);
     end;
 
-    local procedure CheckUnprocessedWebIntegrationActionsAlreadyExist(TableID: Integer; RecId: RecordId; ActionTypeFilter: Text; var WebIntegrationAction2: Record "Web Integration Action Log"): Boolean
+    local procedure CheckUnprocessedWebIntegrationActionsAlreadyExist(TableID: Integer; RecId: RecordId; ActionTypeFilter: Text; ForWebSite: Enum "For WebSite Enum"; var WebIntegrationAction2: Record "Web Integration Action Log"): Boolean
     begin
-        FilterUnprocessedWebIntegrationActions(TableID, RecId, ActionTypeFilter, WebIntegrationAction2);
+        FilterUnprocessedWebIntegrationActions(TableID, RecId, ActionTypeFilter, ForWebSite, WebIntegrationAction2);
         IF NOT WebIntegrationAction2.IsEmpty then
             exit(true);
 
         exit(false);
     end;
 
-    local procedure FilterUnprocessedWebIntegrationActions(TableID: Integer; RecId: RecordId; ActionTypeFilter: Text; var WebIntegrationAction2: Record "Web Integration Action Log")
+    local procedure FilterUnprocessedWebIntegrationActions(TableID: Integer; RecId: RecordId; ActionTypeFilter: Text; ForWebSite: Enum "For WebSite Enum"; var WebIntegrationAction2: Record "Web Integration Action Log")
     begin
         WebIntegrationAction2.SetRange(Processed, false);
         WebIntegrationAction2.SetRange("Table Id", Database::Item);
         WebIntegrationAction2.SetRange("Record ID", RecId);
+        WebIntegrationAction2.SetRange("For WebSite", ForWebSite);
         WebIntegrationAction2.SetFilter("Action Type", ActionTypeFilter);
     end;
 }

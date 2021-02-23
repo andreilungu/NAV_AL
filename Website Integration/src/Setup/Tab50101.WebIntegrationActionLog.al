@@ -89,7 +89,7 @@ table 50101 "Web Integration Action Log"
             Clustered = true;
         }
 
-        key(Key2; "Record ID")
+        key(Key2; Processed, "For WebSite", "Table Id", "Record ID", "Action Type")
         {
 
         }
