@@ -99,9 +99,19 @@ page 50101 "Web Integration Actions"
                 var
                     iWebSiteActionsProcessor: Interface iWebSiteActionsProcessor;
                     WebActions: Record "Web Integration Action Log";
+                    ForWebSiteOrdinals: List Of [Integer];
+                    OrdinalValue: Integer;
+                    i: Integer;
                 begin
-                    iWebSiteActionsProcessor := Rec."For WebSite";
-                    iWebSiteActionsProcessor.ProcessActions(Database::Item);
+                    ForWebSiteOrdinals := ENUM::"For WebSite Enum".Ordinals();
+                    For i := 1 to ForWebSiteOrdinals.Count do begin //process data for all websites
+                        IF ForWebSiteOrdinals.Get(i, OrdinalValue) then begin
+                            iWebSiteActionsProcessor := Enum::"For WebSite Enum".FromInteger(OrdinalValue);
+                            iWebSiteActionsProcessor.ProcessActions(Database::Item);
+                        end;
+                    end;
+                    //iWebSiteActionsProcessor := Rec."For WebSite";
+                    //iWebSiteActionsProcessor.ProcessActions(Database::Item);
                 end;
             }
         }
